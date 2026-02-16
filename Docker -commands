@@ -1,0 +1,33 @@
+1)================================================================================================================================>
+#to create image :
+docker build -t <image name>
+
+#to see image
+docker images
+
+#to create containers: 
+docker run -d --name <container-name> -p(port) <host port no :container port no> <image name>
+****dont forget to change the host port no only for different applications****
+
+#to see the containers:
+docker ps
+
+****
+docker build -t fitness-app:v1.0.0 .
+docker images
+docker run -d --name fitness -p 81:80 fitness-app:v1.0.0 
+docker ps
+****
+
+2)================================================================================================================================>
+#if u want to push
+
+3)================================================================================================================================>
+
+4)================================================================================================================================>
+
+
+
+
+
+
