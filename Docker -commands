@@ -23,17 +23,121 @@ docker ps
 #if u want to push the images into docker hub::
   1.DOCKER TAG:
          docker tag fitness-app:v1.0.0 rithika17/fitness-app:v1.0.0
-  2.DOCKER LOGIN
-         
-  3.DOCKER PUSH
-
+         docker tag <image-name><username/image-name>
+  2.DOCKER LOGIN:
+         docker login -u rithika17 #dockerhub username  , before that have to create account in dockerhub        
+  3.DOCKER PUSH:
+         docker push rithika17/fitness-app:v1.0.0
+         docker push <username/image-name>
 3)================================================================================================================================>
+# DOCKER NETWORKS:
+  1.BRIDGE NETWORK: can create custom network
+      docker network create rithika-network
+      docker inspect rithika-network # used to inspect 
+ **  
+# docker run (creating in interactive container) --name <c-name> --network <nwk-name> <image-name> 
+    docker run -dit --name app1 --network rithika-network fitness-app:v1.0.0
+    docker inspect rithika-network
+    docker inspect app1
+    docker run -dit --name app2 --network rithika-network ubuntu
+    docker inspect rithika-network
+    docker exec -it app1 bash
+==> apt update && apt install iputils -ping -y (ping software)
+    ping app2 # want to call app2 container in app 1
+    docker exec -it app2 bash
+==> apt update && apt install iputils -ping -y (ping software)
+    ping app2 # want to call app2 container in app 1
+ **
+  2.HOST NETWORK:
+      ==>It will use our own IP addresses
+      ==>Docker will not create and manage custom host network
+**
+docker run -dit --name app1 --network host nginx # nginx is a server
+# can check whether run or not by
+netstat -tulpn | grep 80
+**
+  3.NONE NETWORK:
+
+** docker run -dit --name app1 --network none nginx
 
 4)================================================================================================================================>
+# DOCKER COMPOSE: 
+*DC IS A DOCKER TOOL THAT LET US TO DEFINE AND RUN MULTIPLE CONTAINERS TOGETHER USING ONE YML FILE(docker-compose.yml)    
+*USING SINGLE COMMUNICATION WITH ENTIRE APPLICATION
+*change the Dockerfile as per server ---ubuntu,node,nginx,python,java and so on
+##################
+* this is how u have to write yml file:
+version: '3.8'
+services:
+  transaction-app:
+    build: .
+    image: transaction:v1.0.0
+    container_name: transaction-app
+    ports:
+      - "3000:3000"
+    environment:
+      - MONGODB_URI=mongodb://mongodb:27017/transactionhistory  # can get from app.js file if it is 2-tier application
+    networks:
+      - transaction-network
+    depends_on:
+      - mongodb
+
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    networks:
+      - transaction-network
+
+networks:
+  transaction-network:
+    name: transaction-network
+    driver: bridge
+########################
+*after this run:
+*****
+docker-compose up -d
+docker images
+docker ps
+docker inspect transaction-network #(what we have created in yml file)
+#then check the port whether working or not ie.3000#
+docker exec -it mongodb mongosh
+#it shows something as root and do commands like "show dbs"- it will shows databases like transaction history and do "use transactionhistory" 
+and do "show collections" it will shows transactions and do "db.transactions.find().pretty()" then u will do things in web by 3000 port 
+and the database will be shown under this command "db.transactions.find().pretty()"#
+docker-compose down
+*****
 
 5)================================================================================================================================>
 # DOCKER VOLUMES:
-       IT IS A EXTERNAL STORAGE MANAGED BY DOCKER TO PERSIST APP DATA
+      * IT IS A EXTERNAL STORAGE MANAGED BY DOCKER TO PERSIST APP DATA
+      * IF U DLT THE CONTAINER THE VOLUMES WILL NOT BE DELETED
+docker pull "repo"
+docker run -it --name ipl -v /rithika17/ipl:latest/bin/bash
+#it will show an root: ls
+cd /rithika
+pwd
+touch web demo app
+#ANONYMOUS VOLUME:
+docker volume ls
+#it will show one volume like d917af9c4909a847494db011a0422b0581e1464d3e452d9e06cde9659774e2c9
+docker volume inspect d917af9c4909a847494db011a0422b0581e1464d3e452d9e06cde9659774e2c9
+cd /var/lib/docker/volumes/
+ls
+cd d917af9c4909a847494db011a0422b0581e1464d3e452d9e06cde9659774e2c9
+ls
+cd _data
+ls 
+mkdir t-20wc
+ls
+cd t-20wc/
+touch ind sa wi
+ls
+exit
+docker ps
+docker ps -a
+docker rm -f ipl 
 
 
 # NAMED VOLUME:
@@ -74,7 +178,7 @@ exit
 mkdir ~/ipl-bind-volume
 cd ~/ipl-bind-volume
 exit
-docker run -d --name ipl-2 -v ~/ipl-bind-volume:/app/uploads -p 4000:3000 muralisocial123/ipl:latest
+docker run -d --name ipl-2 -v ~/ipl-bind-volume:/app/uploads -p 4000:3000 rithika17/ipl:latest
 docker ps
 cd ~/ipl-bind-volume
 touch app.js service.js index.html
