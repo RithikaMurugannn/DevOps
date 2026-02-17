@@ -1,0 +1,106 @@
+1)================================================================================================================================>
+#to create image :
+docker build -t <image name>
+
+#to see image
+docker images
+
+#to create containers: 
+docker run -d --name <container-name> -p(port) <host port no :container port no> <image name>
+****dont forget to change the host port no only for different applications****
+
+#to see the containers:
+docker ps
+
+****
+docker build -t fitness-app:v1.0.0 .
+docker images
+docker run -d --name fitness -p 81:80 fitness-app:v1.0.0 
+docker ps
+****
+
+2)================================================================================================================================>
+#if u want to push the images into docker hub::
+  1.DOCKER TAG:
+         docker tag fitness-app:v1.0.0 rithika17/fitness-app:v1.0.0
+  2.DOCKER LOGIN
+         
+  3.DOCKER PUSH
+
+3)================================================================================================================================>
+
+4)================================================================================================================================>
+
+5)================================================================================================================================>
+# DOCKER VOLUMES:
+       IT IS A EXTERNAL STORAGE MANAGED BY DOCKER TO PERSIST APP DATA
+
+
+# NAMED VOLUME:
+docker volume create ipl-volume
+docker volume ls
+docker inspect ipl-volume
+cd /var/lib/docker/volumes
+ls
+cd ipl-volume/
+ls
+cd _data
+ls
+mkdir t-20wc
+ls
+cd t-20wc/
+touch ind sa wi
+ls
+exit
+docker ps
+docker ps -a
+docker rm -f ipl  #will remove the container but u can see the volumes
+
+#then can check by this commands
+cd /var/lib/docker/volumes
+ls
+cd ipl-volume/
+ls
+cd _data
+ls
+mkdir t-20wc
+ls
+cd t-20wc
+exit
+
+#BIND VOLUME:
+
+
+mkdir ~/ipl-bind-volume
+cd ~/ipl-bind-volume
+exit
+docker run -d --name ipl-2 -v ~/ipl-bind-volume:/app/uploads -p 4000:3000 muralisocial123/ipl:latest
+docker ps
+cd ~/ipl-bind-volume
+touch app.js service.js index.html
+###
+          root@ab477c449a62:/app# ls
+          Dockerfile        docker-compose.yml  node_modules       package.json   public     services.yaml
+          deployments.yaml  mongo-service.yaml  package-lock.json  play-book.yml  server.js  uploads
+          root@ab477c449a62:/app# cd uploads/
+          root@ab477c449a62:/app/uploads# ls
+          app.js  index.html  service.js
+###
+ls
+exit
+docker exec -it ipl-2 bash
+cd ~/ipl-bind-volume
+###
+       root@ab477c449a62:/app/uploads# mkdir wpl
+       root@ab477c449a62:/app/uploads# ls
+       app.js  index.html  service.js  wpl
+###
+# u can add folders and file here
+
+
+
+
+
+
+
+

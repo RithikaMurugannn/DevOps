@@ -1,0 +1,36 @@
+
+    apt update -y
+     # Add Docker's official GPG key:
+     sudo apt update
+     sudo apt install ca-certificates curl
+     sudo install -m 0755 -d /etc/apt/keyrings
+     sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+     sudo chmod a+r /etc/apt/keyrings/docker.asc
+     # Add the repository to Apt sources:
+     sudo tee /etc/apt/sources.list.d/docker.sources <<EOF
+     Types: deb
+     URIs: https://download.docker.com/linux/ubuntu
+     Suites: $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}")
+     Components: stable
+     Signed-By: /etc/apt/keyrings/docker.asc
+     EOF
+     sudo apt update
+     sudo apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+   77  docker --version
+   78  service docker status
+   79  vi index.html 
+   80  ls
+   81  vi Dockerfile 
+   82  cat Dockerfile 
+   83  ls
+   84  vi style.css
+   85  ls
+   86  vi script.js
+   98  ls
+  103  docker build -t html-login-app:v1.0.0 .
+  104  docker images
+  105  docker run -d --name login-app -p 81:80 html-login-app:v1.0.0
+  106  docker ps
+  107  ls
+  108  docker run -d --name login-app -p 81:80 -v /home/ubuntu:/var/www/html html-login-app:v1.0.0
+  109  history
